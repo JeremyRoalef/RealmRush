@@ -8,7 +8,7 @@ public class EnemyMover : MonoBehaviour
     [SerializeField] List<Waypoint> path = new List<Waypoint>(); //Use a list b/c we will mess with the size of the elements
     [SerializeField] [Range(0.1f,10f)] float fltMoveSpeed = 1f;
 
-    void Start()
+    void OnEnable()
     {
         FindPath();
         ReturnToStart();
@@ -54,6 +54,6 @@ public class EnemyMover : MonoBehaviour
             }
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
