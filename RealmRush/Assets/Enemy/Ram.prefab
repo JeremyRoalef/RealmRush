@@ -95,13 +95,14 @@ GameObject:
   - component: {fileID: 8724184625822673263}
   - component: {fileID: 1305108730550829318}
   - component: {fileID: 9103341573706233984}
+  - component: {fileID: -6160431256130510866}
   m_Layer: 0
   m_Name: Ram
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5672325927823913723
 Transform:
   m_ObjectHideFlags: 0
@@ -163,5 +164,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 23aac35fe1f9f024aad010cf3a3c4cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 5
+--- !u!114 &-6160431256130510866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5040643765344069697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5e378f2128c20f45aa6b7a1a2abea25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
