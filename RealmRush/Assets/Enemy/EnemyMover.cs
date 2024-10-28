@@ -10,10 +10,29 @@ public class EnemyMover : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(PrintWaypointName());
+        FindPath();
+        ReturnToStart();
+        StartCoroutine(FollowPath());
     }
 
-    IEnumerator PrintWaypointName()
+    void ReturnToStart()
+    {
+        transform.position = path[0].transform.position;
+    }
+
+    void FindPath()
+    {
+        path.Clear(); //clear whatever may be in the path before generating new path
+
+        GameObject parent = GameObject.FindGameObjectWithTag("Path");
+
+        foreach (Transform child in parent.transform)
+        {
+            path.Add(child.GetComponent<Waypoint>());
+        }
+    }
+
+    IEnumerator FollowPath()
     {
         //for each waypoint in the path, Lerp between the current position and the end position while the percentage of travel is less than 1
         foreach (Waypoint waypoint in path)
@@ -32,5 +51,7 @@ public class EnemyMover : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
         }
+
+        Destroy(gameObject);
     }
 }
