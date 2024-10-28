@@ -18,6 +18,8 @@ public class EnemyMover : MonoBehaviour
     void ReturnToStart()
     {
         transform.position = path[0].transform.position;
+        //Remove the first object in the path
+        path.Remove(path[0]);
     }
 
     void FindPath()
