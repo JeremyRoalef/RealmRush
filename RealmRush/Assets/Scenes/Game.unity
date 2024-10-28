@@ -522,6 +522,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (2, 2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1975431801362030769, guid: b322dd7a2693f76448d5a76c32a4c4f2, type: 3}
+      propertyPath: m_text
+      value: 2,2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -797,6 +801,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1159752544}
     m_Modifications:
+    - target: {fileID: 4804188599823214140, guid: ab9e4d79f6a8346488e5c1ea5073a263, type: 3}
+      propertyPath: m_text
+      value: 5,2
+      objectReference: {fileID: 0}
     - target: {fileID: 5569939637135970836, guid: ab9e4d79f6a8346488e5c1ea5073a263, type: 3}
       propertyPath: m_Name
       value: Tile (5, 2)
@@ -1521,6 +1529,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1513529769116575318, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
+      propertyPath: m_text
+      value: 1,1
+      objectReference: {fileID: 0}
     - target: {fileID: 1938427778773160574, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
       propertyPath: m_Name
       value: Tile (1, 1)
@@ -1580,6 +1592,10 @@ PrefabInstance:
     - target: {fileID: 247182571052479139, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1513529769116575318, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
+      propertyPath: m_text
+      value: 4,2
       objectReference: {fileID: 0}
     - target: {fileID: 1938427778773160574, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
       propertyPath: m_Name
@@ -1944,6 +1960,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1159752544}
     m_Modifications:
+    - target: {fileID: 4804188599823214140, guid: ab9e4d79f6a8346488e5c1ea5073a263, type: 3}
+      propertyPath: m_text
+      value: 2,1
+      objectReference: {fileID: 0}
     - target: {fileID: 5569939637135970836, guid: ab9e4d79f6a8346488e5c1ea5073a263, type: 3}
       propertyPath: m_Name
       value: Tile (2, 1)
@@ -2143,6 +2163,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile (0, 1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1975431801362030769, guid: b322dd7a2693f76448d5a76c32a4c4f2, type: 3}
+      propertyPath: m_text
+      value: 0,1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2199,6 +2223,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1513529769116575318, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
+      propertyPath: m_text
+      value: 3,2
+      objectReference: {fileID: 0}
     - target: {fileID: 1938427778773160574, guid: 342cb4bd58965c645915b0595e1e3634, type: 3}
       propertyPath: m_Name
       value: Tile (3, 2)
@@ -2227,6 +2255,10 @@ PrefabInstance:
     - target: {fileID: 4778265196948251206, guid: 40dcafc2ae80aef4db00bd4eceee5f3c, type: 3}
       propertyPath: m_Name
       value: Tile (5, 3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5595793336978658926, guid: 40dcafc2ae80aef4db00bd4eceee5f3c, type: 3}
+      propertyPath: m_text
+      value: 5,3
       objectReference: {fileID: 0}
     - target: {fileID: 6613333842183864987, guid: 40dcafc2ae80aef4db00bd4eceee5f3c, type: 3}
       propertyPath: m_LocalPosition.x
