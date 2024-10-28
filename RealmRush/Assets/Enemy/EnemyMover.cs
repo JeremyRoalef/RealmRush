@@ -6,25 +6,31 @@ public class EnemyMover : MonoBehaviour
 {
     //pass in a bunch of waypoints for the enemy to move to and then loop through those waypoints to move the enemy to the location
     [SerializeField] List<Waypoint> path = new List<Waypoint>(); //Use a list b/c we will mess with the size of the elements
-    [SerializeField] float fltMoveWaitTime = 1f;
+    [SerializeField] [Range(0.1f,10f)] float fltMoveSpeed = 1f;
 
-
-    // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log("start");
         StartCoroutine(PrintWaypointName());
-        //Debug.Log("finish");
     }
 
     IEnumerator PrintWaypointName()
     {
-        //Delay each waypoint by 1 second (or variable time)
+        //for each waypoint in the path, Lerp between the current position and the end position while the percentage of travel is less than 1
         foreach (Waypoint waypoint in path)
         {
-            transform.position = waypoint.transform.position;
-            yield return new WaitForSeconds(fltMoveWaitTime);
-            //Debug.Log(waypoint);
+            Vector3 startPos = transform.position;
+            Vector3 endPos = waypoint.transform.position;
+            float fltTravelPercent = 0f;
+            //Use LERP (Linear Interpolation) to move object smoothly between two positions
+
+            transform.LookAt(endPos);
+
+            while (fltTravelPercent < 1f)
+            {
+                fltTravelPercent += Time.deltaTime * fltMoveSpeed; //travel percentage will increase based on elapsed time
+                transform.position = Vector3.Lerp(startPos, endPos, fltTravelPercent);
+                yield return new WaitForEndOfFrame();
+            }
         }
     }
 }
