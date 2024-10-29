@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Bank : MonoBehaviour
 {
     [SerializeField] int intStartingBalance = 10;
-    [SerializeField] int towerCost = 4;
-
     [SerializeField] int intCurrentBalance;
     public int IntCurrentBalance
     {
@@ -25,5 +24,10 @@ public class Bank : MonoBehaviour
     public void Withdraw(int amount)
     {
         intCurrentBalance -= Mathf.Abs(amount);
+        if (intCurrentBalance < 0)
+        {
+            Debug.Log("YOU LOSE");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
