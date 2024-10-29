@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Enemy))]
 public class EnemyMover : MonoBehaviour
 {
     //pass in a bunch of waypoints for the enemy to move to and then loop through those waypoints to move the enemy to the location
@@ -36,8 +37,18 @@ public class EnemyMover : MonoBehaviour
 
         foreach (Transform child in parent.transform)
         {
-            path.Add(child.GetComponent<Waypoint>());
+            Waypoint waypoint = child.GetComponent<Waypoint>();
+            if (waypoint != null)
+            {
+                path.Add(waypoint);
+            }
         }
+    }
+
+    void FinishPath()
+    {
+        gameObject.SetActive(false);
+        enemy.RemoveGold();
     }
 
     IEnumerator FollowPath()
@@ -60,7 +71,6 @@ public class EnemyMover : MonoBehaviour
             }
         }
 
-        gameObject.SetActive(false);
-        enemy.RemoveGold();
+        FinishPath();
     }
 }

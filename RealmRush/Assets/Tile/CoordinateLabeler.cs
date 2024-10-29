@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using System;
-using System.Reflection.Emit;
+using UnityEngine;
 
 //THIS IS SO COOL
 
 [ExecuteAlways] //execute this script in edit mode and in play mode
+[RequireComponent(typeof(TextMeshPro))]
 public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
@@ -35,7 +32,7 @@ public class CoordinateLabeler : MonoBehaviour
             UpdateGameObjectName();
         }
 
-        ColorCoordinates();
+        SetTextColor();
         ToggleLabels();
     }
     void DisplayCurrentCoordinates()
@@ -51,7 +48,7 @@ public class CoordinateLabeler : MonoBehaviour
         transform.parent.name = $"Tile {position.ToString()}";
     }
 
-    void ColorCoordinates()
+    void SetTextColor()
     {
         if (waypoint.IsPlaceable)
         {
