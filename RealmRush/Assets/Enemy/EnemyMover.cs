@@ -6,14 +6,19 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
     //pass in a bunch of waypoints for the enemy to move to and then loop through those waypoints to move the enemy to the location
-    [SerializeField] List<Tile> path = new List<Tile>(); //Use a list b/c we will mess with the size of the elements
+    List<TileNode> path = new List<TileNode>(); //Use a list b/c we will mess with the size of the elements
     [SerializeField] [Range(0.1f,10f)] float fltMoveSpeed = 1f;
 
     Enemy enemy;
+    GridManager gridManager;
+    Pathfinder pathfinder;
 
-    private void Start()
+
+    private void Awake()
     {
         enemy = GetComponent<Enemy>();
+        gridManager = FindObjectOfType<GridManager>();
+        pathfinder = FindObjectOfType<Pathfinder>();
     }
     void OnEnable()
     {
@@ -24,25 +29,13 @@ public class EnemyMover : MonoBehaviour
 
     void ReturnToStart()
     {
-        transform.position = path[0].transform.position;
-        //Remove the first object in the path
-        path.Remove(path[0]);
+        transform.position = gridManager.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
     void FindPath()
     {
         path.Clear(); //clear whatever may be in the path before generating new path
-
-        GameObject parent = GameObject.FindGameObjectWithTag("Path");
-
-        foreach (Transform child in parent.transform)
-        {
-            Tile waypoint = child.GetComponent<Tile>();
-            if (waypoint != null)
-            {
-                path.Add(waypoint);
-            }
-        }
+        path = pathfinder.GetNewPath();
     }
 
     void FinishPath()
@@ -54,10 +47,10 @@ public class EnemyMover : MonoBehaviour
     IEnumerator FollowPath()
     {
         //for each waypoint in the path, Lerp between the current position and the end position while the percentage of travel is less than 1
-        foreach (Tile waypoint in path)
+        for(int i = 0; i < path.Count; i++)
         {
             Vector3 startPos = transform.position;
-            Vector3 endPos = waypoint.transform.position;
+            Vector3 endPos = gridManager.GetPositionFromCoordinates(path[i].coordinates);
             float fltTravelPercent = 0f;
             //Use LERP (Linear Interpolation) to move object smoothly between two positions
 
