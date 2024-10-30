@@ -39,8 +39,9 @@ public class CoordinateLabeler : MonoBehaviour
     }
     void DisplayCurrentCoordinates()
     {
-        position.x = Mathf.RoundToInt(transform.parent.position.x/ UnityEditor.EditorSnapSettings.move.x); //position is multiplicative of 10, but can use the grid snapp setting
-        position.y = Mathf.RoundToInt(transform.parent.position.z/ UnityEditor.EditorSnapSettings.move.z); //the 2d layout in the game uses x,z coordinates, so the z coordinate will be stored in the second vector
+        if (gridManager == null) { return; }
+        position.x = Mathf.RoundToInt(transform.parent.position.x/ gridManager.UnityGridSize); //position is multiplicative of 10, but can use the grid snapp setting
+        position.y = Mathf.RoundToInt(transform.parent.position.z/ gridManager.UnityGridSize); //the 2d layout in the game uses x,z coordinates, so the z coordinate will be stored in the second vector
 
         textCoordinate.text = $"{position.x},{position.y}";
     }

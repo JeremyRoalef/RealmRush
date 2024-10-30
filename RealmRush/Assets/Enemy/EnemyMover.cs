@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemyMover : MonoBehaviour
 {
     //pass in a bunch of waypoints for the enemy to move to and then loop through those waypoints to move the enemy to the location
-    [SerializeField] List<Waypoint> path = new List<Waypoint>(); //Use a list b/c we will mess with the size of the elements
+    [SerializeField] List<Tile> path = new List<Tile>(); //Use a list b/c we will mess with the size of the elements
     [SerializeField] [Range(0.1f,10f)] float fltMoveSpeed = 1f;
 
     Enemy enemy;
@@ -37,7 +37,7 @@ public class EnemyMover : MonoBehaviour
 
         foreach (Transform child in parent.transform)
         {
-            Waypoint waypoint = child.GetComponent<Waypoint>();
+            Tile waypoint = child.GetComponent<Tile>();
             if (waypoint != null)
             {
                 path.Add(waypoint);
@@ -54,7 +54,7 @@ public class EnemyMover : MonoBehaviour
     IEnumerator FollowPath()
     {
         //for each waypoint in the path, Lerp between the current position and the end position while the percentage of travel is less than 1
-        foreach (Waypoint waypoint in path)
+        foreach (Tile waypoint in path)
         {
             Vector3 startPos = transform.position;
             Vector3 endPos = waypoint.transform.position;
