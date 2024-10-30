@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour
@@ -7,6 +8,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] Vector2Int gridSize;
 
     Dictionary<Vector2Int, TileNode> grid = new Dictionary<Vector2Int, TileNode>();
+    public Dictionary<Vector2Int, TileNode> Grid { get { return grid; } }
 
     private void Awake()
     {
@@ -21,8 +23,6 @@ public class GridManager : MonoBehaviour
             {
                 Vector2Int coordinates = new Vector2Int(x, y);
                 grid.Add(coordinates, new TileNode(coordinates, true));
-                Debug.Log(grid[coordinates].coordinates + " " + grid[coordinates].isWalkable);
-                
             }
         }
     }
