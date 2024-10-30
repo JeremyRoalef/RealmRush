@@ -36,7 +36,7 @@ public class Pathfinder : MonoBehaviour
 
     void ExploreNeighbors()
     {
-        List<TileNode> nieghbors = new List<TileNode>();
+        List<TileNode> neighbors = new List<TileNode>();
 
         foreach (Vector2Int direction in directions)
         {
@@ -44,11 +44,11 @@ public class Pathfinder : MonoBehaviour
 
             if (grid.ContainsKey(neighborCoordinates))
             {
-                nieghbors.Add(grid[neighborCoordinates]);
+                neighbors.Add(grid[neighborCoordinates]);
             }
         }
 
-        foreach (TileNode neighbor in nieghbors)
+        foreach (TileNode neighbor in neighbors)
         {
             if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isWalkable)
             {
