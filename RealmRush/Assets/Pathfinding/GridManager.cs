@@ -26,4 +26,16 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
+    public TileNode getTileNode(Vector2Int coordinates)
+    {
+        if (grid.ContainsKey(coordinates))
+        {
+            return grid[coordinates];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

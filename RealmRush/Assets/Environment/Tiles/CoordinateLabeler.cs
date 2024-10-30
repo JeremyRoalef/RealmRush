@@ -9,14 +9,16 @@ public class CoordinateLabeler : MonoBehaviour
 {
     [SerializeField] Color defaultColor = Color.white;
     [SerializeField] Color blockedColor = Color.gray;
+    [SerializeField] Color exploredColor = Color.yellow;
+    [SerializeField] Color pathColor = new Color(1f,.5f,0f);
 
     TextMeshPro textCoordinate;
     Vector2Int position = new Vector2Int();
-    Waypoint waypoint;
+    GridManager gridManager;
 
     private void Awake()
     {
-        waypoint = GetComponentInParent<Waypoint>(); //get the parent component of type waypoint
+        gridManager = FindObjectOfType<GridManager>();
         textCoordinate = GetComponent<TextMeshPro>();
         DisplayCurrentCoordinates();
         UpdateGameObjectName();
@@ -50,13 +52,27 @@ public class CoordinateLabeler : MonoBehaviour
 
     void SetTextColor()
     {
-        if (waypoint.IsPlaceable)
+        if (gridManager == null) { return; }
+
+        TileNode tileNode = gridManager.getTileNode(position);
+
+        if (tileNode == null) { return; }
+
+        if (!tileNode.isWalkable)
         {
-            textCoordinate.color = defaultColor;
+            textCoordinate.color = blockedColor;
+        }
+        else if (tileNode.isPath)
+        {
+            textCoordinate.color = pathColor;
+        }
+        else if (tileNode.isExplored)
+        {
+            textCoordinate.color = exploredColor;
         }
         else
         {
-            textCoordinate.color = blockedColor;
+            textCoordinate.color = defaultColor;
         }
     }
 
