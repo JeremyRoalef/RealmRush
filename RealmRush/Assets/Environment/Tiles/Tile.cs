@@ -8,6 +8,8 @@ public class Tile : MonoBehaviour
     //Create a property to get and set the isPlaceable boolean. Same as getter & setter methods
 
     GridManager gridManager;
+    Pathfinder pathfinder;
+
     Vector2Int coordinates = new Vector2Int();
     public bool IsPlaceable
     {
@@ -20,6 +22,7 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
+        pathfinder = FindObjectOfType<Pathfinder>();
     }
 
     private void Start()
@@ -36,10 +39,11 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (isPlaceable)
+        if (gridManager.getTileNode(coordinates).isWalkable && !pathfinder.WillBlockPath(coordinates))
         {
             bool isPlaced = tower.CreateTower(tower, transform.position);
             IsPlaceable = !isPlaced;
+            gridManager.BlockNode(coordinates);
         }
     }
 }

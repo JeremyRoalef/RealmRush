@@ -68,5 +68,13 @@ public class GridManager : MonoBehaviour
         }
     }
 
-
+    public void ResetNodes()
+    {
+        foreach (KeyValuePair<Vector2Int, TileNode> entry in grid)
+        {
+            entry.Value.connectedTo = null;
+            entry.Value.isExplored = false;
+            entry.Value.isPath = false;
+        }
+    }
 }
