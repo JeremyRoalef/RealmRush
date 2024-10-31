@@ -22,7 +22,7 @@ public class EnemyMover : MonoBehaviour
     }
     void OnEnable()
     {
-        FindPath();
+        RecalculatePath();
         ReturnToStart();
         StartCoroutine(FollowPath());
     }
@@ -32,7 +32,7 @@ public class EnemyMover : MonoBehaviour
         transform.position = gridManager.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
-    void FindPath()
+    void RecalculatePath()
     {
         path.Clear(); //clear whatever may be in the path before generating new path
         path = pathfinder.GetNewPath();
