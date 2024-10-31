@@ -22,9 +22,8 @@ public class EnemyMover : MonoBehaviour
     }
     void OnEnable()
     {
-        RecalculatePath();
         ReturnToStart();
-        StartCoroutine(FollowPath());
+        RecalculatePath(true);
     }
 
     void ReturnToStart()
@@ -32,10 +31,25 @@ public class EnemyMover : MonoBehaviour
         transform.position = gridManager.GetPositionFromCoordinates(pathfinder.StartCoordinates);
     }
 
-    void RecalculatePath()
+    void RecalculatePath(bool resetPath)
     {
+        Vector2Int coordinates = new Vector2Int();
+
+        if (resetPath)
+        {
+            coordinates = pathfinder.StartCoordinates;
+        }
+        else
+        {
+            coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
+        }
+
+        StopAllCoroutines();
+
         path.Clear(); //clear whatever may be in the path before generating new path
-        path = pathfinder.GetNewPath();
+        path = pathfinder.GetNewPath(coordinates);
+
+        StartCoroutine(FollowPath());
     }
 
     void FinishPath()
@@ -47,7 +61,7 @@ public class EnemyMover : MonoBehaviour
     IEnumerator FollowPath()
     {
         //for each waypoint in the path, Lerp between the current position and the end position while the percentage of travel is less than 1
-        for(int i = 0; i < path.Count; i++)
+        for(int i = 1; i < path.Count; i++)
         {
             Vector3 startPos = transform.position;
             Vector3 endPos = gridManager.GetPositionFromCoordinates(path[i].coordinates);
