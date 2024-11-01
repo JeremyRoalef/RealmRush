@@ -2,33 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * This script is attached to the object pool prefab
+ * 
+ * This script will be responsible for spawning in waves of customized enemies for a given path
+ */
 public class ObjectPool : MonoBehaviour
 {
+    //TODO: Object pool will no longer rely on one type of enemy to spawn enemies, but rather will accept an array of enemies that will release
+    //TODO: Add an initial wait time before letting the objects in the pool go.
+
+    //Serialized fields
     [SerializeField] GameObject ram;
     [SerializeField] [Range(0,50)] int intPoolSize = 5;
     [SerializeField] [Range(0.1f, 180f)] float fltInstantiationWaitTime = 1f;
-    bool isSpawning = false;
 
-    //Create pool of game object to reduce instantiation happening in the game. May prevent lag
-    GameObject[] pool;
+    //Cashe references
+    //TODO: change the enemy pool to a serialized field. The pool of enemies will be determined within unity & this script's job will simply be to instantiate & enable the enemies in the game
+    GameObject[] enemyPool;
+
+    //Attributes
+    bool isSpawning = false;
 
     void Start()
     {
+        //Add enemies to the pool
         PopulatePool();
     }
 
     void PopulatePool()
     {
-        pool = new GameObject[intPoolSize];
-        for (int i = 0; i < pool.Length; i++)
+        //Instantiate enemies to the enemy pool
+        enemyPool = new GameObject[intPoolSize];
+        for (int i = 0; i < enemyPool.Length; i++)
         {
-            pool[i] = Instantiate(ram, transform);
-            pool[i].SetActive(false);
+            enemyPool[i] = Instantiate(ram, transform);
+            enemyPool[i].SetActive(false);
         }
     }
 
     void Update()
     {
+        //if no enemies are spawning, spawn enemies
         if (!isSpawning)
         {
             StartCoroutine(InstantiateEnemy());
@@ -37,7 +52,8 @@ public class ObjectPool : MonoBehaviour
 
     void EnableObjectInPool()
     {
-        foreach (GameObject obj in pool)
+        //enable the first object in the pool that is disabled.
+        foreach (GameObject obj in enemyPool)
         {
             if (obj.activeInHierarchy == false)
             {
@@ -49,9 +65,14 @@ public class ObjectPool : MonoBehaviour
 
     IEnumerator InstantiateEnemy()
     {
+        //spawning enemy
         isSpawning = true;
+
+        //wait to spawn next enemy
         yield return new WaitForSeconds(fltInstantiationWaitTime);
         EnableObjectInPool();
+
+        //no longer spawning enemy
         isSpawning = false;
     }
 }

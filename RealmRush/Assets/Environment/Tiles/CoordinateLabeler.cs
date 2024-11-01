@@ -1,64 +1,100 @@
 using TMPro;
 using UnityEngine;
 
-//THIS IS SO COOL
+/*
+ * This script is attached to the Tile prefab under the Text (TMP) child.
+ * This script will be responsible for displaying the tile coordinates in the game. The game will show the various colors of text based on the pathfinding
+ * of the enemies in the game. However, due to issues with Unity's input system, toggling the coordinates off and on in the editor version will not be
+ * possible. For debugging purposes, the game version will be able to toggle.
+ */
 
-[ExecuteAlways] //execute this script in edit mode and in play mode
+//Use "ExecuteAlways" to make this script execute while in the Unity editor and while in the game
+[ExecuteAlways]
+
+//Make the object this script is attached to have teh TextMeshPro component. This will prevent potential null reference exception errors.
 [RequireComponent(typeof(TextMeshPro))]
 public class CoordinateLabeler : MonoBehaviour
 {
-    [SerializeField] Color defaultColor = Color.white;
-    [SerializeField] Color blockedColor = Color.gray;
-    [SerializeField] Color exploredColor = Color.yellow;
-    [SerializeField] Color pathColor = new Color(1f,.5f,0f);
+    //Gather serialized fields for colors to show state of tile coordinates
+    [SerializeField][Tooltip("The default color of the text")] Color defaultColor = Color.white;
+    [SerializeField][Tooltip("The blocked color of the text")] Color blockedColor = Color.gray;
+    [SerializeField][Tooltip("The explored color of the text")] Color exploredColor = Color.yellow;
+    [SerializeField][Tooltip("The color of the path text")] Color pathColor = new Color(1f,.5f,0f); //orange
 
+    //Cashe references
     TextMeshPro textCoordinate;
-    Vector2Int position = new Vector2Int();
     GridManager gridManager;
+
+    //Attributes
+    Vector2Int position = new Vector2Int();
 
     private void Awake()
     {
+        //Find object in scene that has the currentGrid manager.
         gridManager = FindObjectOfType<GridManager>();
+
+        //get TMPro component
         textCoordinate = GetComponent<TextMeshPro>();
+
+
         DisplayCurrentCoordinates();
         UpdateGameObjectName();
+
+        //Default text coordinates to false so players don't see it in the game
         textCoordinate.enabled = false;
-
     }
-
     void Update()
     {
-        if (!Application.isPlaying) //ONLY RUN THIS IF THE APPLICATION IS NOT IN PLAY MODE
+        /*
+         * If the game is not playing (in Unity inspector), display the coordinates, update the object's name based on the coordinates,
+         * toggle the coordinates on, & set the text colors.
+         * Otherwise, toggle the labels on/off & set the text colors
+         */
+
+        if (!Application.isPlaying)
         {
             DisplayCurrentCoordinates();
             UpdateGameObjectName();
+            textCoordinate.enabled=true;
+            SetTextColor();
         }
-
-        SetTextColor();
-        ToggleLabels();
+        else
+        {
+            ToggleLabels();
+            SetTextColor();
+        }
     }
     void DisplayCurrentCoordinates()
     {
+        //DO NOT RUN IF THERE IS NO GRID MANAGER!!!
         if (gridManager == null) { return; }
-        position.x = Mathf.RoundToInt(transform.parent.position.x/ gridManager.UnityGridSize); //position is multiplicative of 10, but can use the grid snapp setting
+
+        //Get the x,y coordinate pair of the parent game object.
+        position.x = Mathf.RoundToInt(transform.parent.position.x/ gridManager.UnityGridSize); //position is multiplicative of 10, but can use the currentGrid snapp setting
         position.y = Mathf.RoundToInt(transform.parent.position.z/ gridManager.UnityGridSize); //the 2d layout in the game uses x,z coordinates, so the z coordinate will be stored in the second vector
 
+        //Set UI text
         textCoordinate.text = $"{position.x},{position.y}";
     }
 
     void UpdateGameObjectName()
     {
+        //Set parent gameObject's name equal to the coordinate of the parent object.
         transform.parent.name = $"Tile {position.ToString()}";
     }
 
     void SetTextColor()
     {
+        //DO NOT RUN IF THERE IS NO GRID MANAGER!!!
         if (gridManager == null) { return; }
 
+        //temp tile node
         TileNode tileNode = gridManager.getTileNode(position);
 
+        //DO NOT RUN IF THERE IS NO TILE NODE!!!
         if (tileNode == null) { return; }
 
+        //Set coordinate color
         if (!tileNode.isWalkable)
         {
             textCoordinate.color = blockedColor;
@@ -79,9 +115,10 @@ public class CoordinateLabeler : MonoBehaviour
 
     void ToggleLabels()
     {
+        //Toggle coordinates on/off based on previous state of the coordinates
         if (Input.GetKeyDown(KeyCode.C))
         {
-            textCoordinate.enabled = !textCoordinate.IsActive(); //when pressing the c button, turn on/off the text coordinates
+            textCoordinate.enabled = !textCoordinate.enabled;
         }
     }
 }
