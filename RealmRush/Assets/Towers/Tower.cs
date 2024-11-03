@@ -37,6 +37,7 @@ public class Tower : MonoBehaviour
         //Create tower if the player can afford the cost
         if (bank.IntCurrentBalance >= intTowerCost)
         {
+            Debug.Log("Tower placed");
             Instantiate(tower, position, Quaternion.identity);
             bank.Withdraw(intTowerCost);
             return true;

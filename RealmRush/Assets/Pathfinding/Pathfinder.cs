@@ -83,9 +83,6 @@ public class Pathfinder : MonoBehaviour
             case PathfindingMethod.FindOwnPath:
                 FindOwnPath();
                 break;
-            case PathfindingMethod.DirectPathing:
-                PathDirectly();
-                break;
             default:
                 break;
         }
@@ -144,17 +141,6 @@ public class Pathfinder : MonoBehaviour
         }
 
         //build the path
-        return BuildPath();
-    }
-    public List<TileNode> PathDirectly()
-    {
-        //Reset the path
-        gridManager.ResetNodes();
-
-        //Use trail to determine the path
-        ExploreNeighbors(startNode);
-
-        //Build the path based on the trail
         return BuildPath();
     }
     public void NotifyReceivers()

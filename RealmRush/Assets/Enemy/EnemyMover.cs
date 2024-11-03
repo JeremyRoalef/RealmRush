@@ -28,10 +28,11 @@ public class EnemyMover : MonoBehaviour
     {
         //get components
         enemy = GetComponent<Enemy>();
+        pathfinder = transform.parent.GetComponent<Pathfinder>();
 
         //get objects in scene
         gridManager = FindObjectOfType<GridManager>();
-        pathfinder = FindObjectOfType<Pathfinder>();
+
     }
     void OnEnable()
     {
@@ -52,7 +53,7 @@ public class EnemyMover : MonoBehaviour
                 RecalculatePath(true);
                 break;
             case Pathfinder.PathfindingMethod.DirectPathing:
-                PathDirectly();
+                StartCoroutine(PathDirectly());
                 break;
             default:
                 Debug.Log("No pathfinding method determined. Please select a pathfind method");
@@ -96,10 +97,22 @@ public class EnemyMover : MonoBehaviour
         StartCoroutine(FollowPath());
     }
 
-    void PathDirectly()
+    IEnumerator PathDirectly()
     {
-        path = pathfinder.PathDirectly();
-        StartCoroutine(FollowPath());
+        float fltTravelPercent = 0f;
+        Vector3 startPos = transform.position;
+        Vector3 endPos = gridManager.GetPositionFromCoordinates(pathfinder.EndCoordinates);
+
+        transform.LookAt(endPos);
+
+        while (fltTravelPercent < 1f)
+        {
+            fltTravelPercent +=  fltMoveSpeed * Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, endPos, fltTravelPercent);
+            yield return new WaitForEndOfFrame();
+        }
+
+        FinishPath();
     }
     void FinishPath()
     {
@@ -107,6 +120,7 @@ public class EnemyMover : MonoBehaviour
         gameObject.SetActive(false);
         enemy.RemoveGold();
     }
+    
 
     IEnumerator FollowPath()
     {
