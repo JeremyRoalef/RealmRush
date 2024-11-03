@@ -24,12 +24,23 @@ public class ObjectPool : MonoBehaviour
     //Attributes
     bool isSpawning = false;
 
+    //Event Systems
     void Start()
     {
         //Add enemies to the pool
         PopulatePool();
     }
+    void Update()
+    {
+        //if no enemies are spawning, spawn enemies
+        if (!isSpawning)
+        {
+            StartCoroutine(InstantiateEnemy());
+        }
+    }
+    //Public Methods
 
+    //Private Methods
     void PopulatePool()
     {
         //Instantiate enemies to the enemy pool
@@ -40,16 +51,6 @@ public class ObjectPool : MonoBehaviour
             enemyPool[i].SetActive(false);
         }
     }
-
-    void Update()
-    {
-        //if no enemies are spawning, spawn enemies
-        if (!isSpawning)
-        {
-            StartCoroutine(InstantiateEnemy());
-        }
-    }
-
     void EnableObjectInPool()
     {
         //enable the first object in the pool that is disabled.
@@ -62,7 +63,6 @@ public class ObjectPool : MonoBehaviour
             }
         }
     }
-
     IEnumerator InstantiateEnemy()
     {
         //spawning enemy

@@ -36,6 +36,8 @@ public class Pathfinder : MonoBehaviour
     Dictionary<Vector2Int, TileNode> reached = new Dictionary<Vector2Int, TileNode>();
 
     Queue<TileNode> frontier = new Queue<TileNode>();
+    
+    //Event Systems
     void Awake()
     {
         //get grid manager
@@ -59,12 +61,12 @@ public class Pathfinder : MonoBehaviour
         GetNewPath();
     }
 
+    //Public Methods
     public List<TileNode> GetNewPath()
     {
         //Get path form starting coordinates
         return GetNewPath(startCoordinates);
     }
-    //overload method
     public List<TileNode> GetNewPath(Vector2Int coordinates)
     {
         //Reset the path
@@ -76,7 +78,40 @@ public class Pathfinder : MonoBehaviour
         //Build the path based on the breadth first search
         return BuildPath();
     }
+    public void NotifyReceivers()
+    {
+        //Tell any script attached to this gameObject to recalculate the enemy path.
+        BroadcastMessage("RecalculatePath", false, SendMessageOptions.DontRequireReceiver);
+    }
+    public bool WillBlockPath(Vector2Int coordinates)
+    {
+        //Test if whatever action is about to happen will preven the object from ever reaching the path
 
+        if (currentGrid.ContainsKey(coordinates))
+        {
+            //Save the TileNode's previous state before changing it
+            bool previousState = currentGrid[coordinates].isWalkable;
+
+            //Test what happens if the TileNode is no longer walkable
+            currentGrid[coordinates].isWalkable = false;
+
+            List<TileNode> newPath = GetNewPath();
+
+            //Reset the TileNode back to its previous state
+            currentGrid[coordinates].isWalkable = previousState;
+
+            //If there is no path, this action will block the path
+            if (newPath.Count <= 1)
+            {
+                GetNewPath();
+                return true;
+            }
+        }
+        //By default, return false
+        return false;
+    }
+
+    //Private Methods
     void ExploreNeighbors()
     {
         //Get the neighbors of the current node
@@ -178,37 +213,4 @@ public class Pathfinder : MonoBehaviour
         return path;
     }
 
-    public bool WillBlockPath(Vector2Int coordinates)
-    {
-        //Test if whatever action is about to happen will preven the object from ever reaching the path
-
-        if (currentGrid.ContainsKey(coordinates))
-        {
-            //Save the TileNode's previous state before changing it
-            bool previousState = currentGrid[coordinates].isWalkable;
-
-            //Test what happens if the TileNode is no longer walkable
-            currentGrid[coordinates].isWalkable = false;
-
-            List<TileNode> newPath = GetNewPath();
-            
-            //Reset the TileNode back to its previous state
-            currentGrid[coordinates].isWalkable = previousState;
-
-            //If there is no path, this action will block the path
-            if (newPath.Count <= 1)
-            {
-                GetNewPath();
-                return true;
-            }
-        }
-        //By default, return false
-        return false;
-    }
-
-    public void NotifyReceivers()
-    {
-        //Tell any script attached to this gameObject to recalculate the enemy path.
-        BroadcastMessage("RecalculatePath", false, SendMessageOptions.DontRequireReceiver);
-    }
 }

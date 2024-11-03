@@ -16,12 +16,14 @@ public class Enemy : MonoBehaviour
     //Cashe references
     Bank bank;
 
+    //Event Systems
     void Start()
     {
         //set references
         bank = FindObjectOfType<Bank>();
     }
 
+    //Public Methods
     public void RewardGold()
     {
         //DO NOT RUN IF THERE IS NO BANK!!!
@@ -46,4 +48,7 @@ public class Enemy : MonoBehaviour
         //Remove gold from player
         bank.Withdraw(goldPenalty);
     }
+
+    //Private Methods
+
 }

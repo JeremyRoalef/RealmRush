@@ -19,12 +19,16 @@ public class TargetLocator : MonoBehaviour
     //Cashe references
     Transform target;
 
+    //Event Systems
     void Update()
     {
         TargetEnemy();
         AimWeapon();
     }
     
+    //Public Methods
+
+    //Private Methods
     void TargetEnemy()
     {
         //TODO: Change target behavior based on conditions the player wants. EX: target closest or furthst enemy
@@ -52,7 +56,6 @@ public class TargetLocator : MonoBehaviour
         //set the tower's target to the clostest target
         target = closestTarget;
     }
-
     void AimWeapon()
     {
         //TODO: Add a default state where the tower is not attacking an enemy. Stop staring at the enemies menacingly!
@@ -77,7 +80,6 @@ public class TargetLocator : MonoBehaviour
             Attack(false);
         }
     }
-
     void Attack(bool isActive)
     {
         //TODO: change how the tower attacks. Instead of relying on a particle system, use a projectile enemyPool to enable the projectile in the direction you want to fire. This will make life easier later. Trust

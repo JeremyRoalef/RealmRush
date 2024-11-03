@@ -39,14 +39,15 @@ public class Tile : MonoBehaviour
     //Attributes
     Vector2Int coordinates = new Vector2Int();
 
-    private void Awake()
+    //Event Systems
+    void Awake()
     {
         //Find references in game scene
         gridManager = FindObjectOfType<GridManager>();
         pathfinder = FindObjectOfType<Pathfinder>();
     }
 
-    private void Start()
+    void Start()
     {
         //On the start of object, get the coordinates of this tile in the currentGrid manager & block this tile if isPlaceable is set to false
         if (gridManager != null)
@@ -65,7 +66,7 @@ public class Tile : MonoBehaviour
 
 
     //TODO: Create a new script that allows the behavior of tower building in the game. Tile script should not be responsible for this action!
-    private void OnMouseDown()
+    void OnMouseDown()
     {
         //Run only if placing this tower will not break the pathfinding
         if (gridManager.getTileNode(coordinates).isWalkable && !pathfinder.WillBlockPath(coordinates))
@@ -78,4 +79,8 @@ public class Tile : MonoBehaviour
             }
         }
     }
+
+    //Public Methods
+
+    //Private Methods
 }

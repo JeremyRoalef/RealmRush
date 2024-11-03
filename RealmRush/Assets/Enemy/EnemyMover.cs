@@ -23,6 +23,7 @@ public class EnemyMover : MonoBehaviour
     Pathfinder pathfinder;
     List<TileNode> path = new List<TileNode>();
 
+    //Event Systems
     private void Awake()
     {
         //get components
@@ -38,6 +39,9 @@ public class EnemyMover : MonoBehaviour
         RecalculatePath(true);
     }
 
+    //Public Methods
+
+    //Private Methods
     void ReturnToStart()
     {
         //set position to the start coordinates in the currentGrid manager

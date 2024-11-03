@@ -25,13 +25,7 @@ public class EnemyHealth : MonoBehaviour
     //Attributes
     int currentHp = 0;
 
-
-    private void Start()
-    {
-        //get components
-        enemy = GetComponent<Enemy>();
-    }
-
+    //Event Systems
     void OnEnable()
     {
         //Reset hp
@@ -39,7 +33,7 @@ public class EnemyHealth : MonoBehaviour
     }
 
     //TODO: Enemy health will not rely on particles in the game to reduce hp. Rather, they will hit triggers that will tell the object how much hp to lose
-    private void OnParticleCollision(GameObject other)
+    void OnParticleCollision(GameObject other)
     {
         //reduce hp
         currentHp -= 1;
@@ -51,4 +45,13 @@ public class EnemyHealth : MonoBehaviour
             maxHp += hpIncrement;
         }
     }
+    void Start()
+    {
+        //get components
+        enemy = GetComponent<Enemy>();
+    }
+    //Public Methods
+
+    //Private Methods
+
 }

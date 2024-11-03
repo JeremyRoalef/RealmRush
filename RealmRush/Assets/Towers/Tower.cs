@@ -14,13 +14,14 @@ public class Tower : MonoBehaviour
     [SerializeField] int intTowerCost = 4;
     [SerializeField] float fltBuildDelay;
 
-
+    //Event Systems
     private void Start()
     {
         //TODO: add a UI to better visually indicate that this tower was created & is being built
         StartCoroutine(Build());
     }
 
+    //Public Methods
     public bool CreateTower(Tower tower, Vector3 position)
     {
         //Find the bank in the game
@@ -46,6 +47,7 @@ public class Tower : MonoBehaviour
         }
     }
 
+    //Private Methods
     IEnumerator Build()
     {
         //Disable all the tower components

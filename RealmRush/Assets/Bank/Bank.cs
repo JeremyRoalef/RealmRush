@@ -29,13 +29,14 @@ public class Bank : MonoBehaviour
         }
     }
 
-
+    //Event Systems
     private void Awake()
     {
         //Set current balance to starting balance & display the current gold
         IntCurrentBalance = intStartingBalance;
     }
 
+    //Public Methods
     public void Deposit(int amount)
     {
         //Add amount to gold
@@ -56,6 +57,7 @@ public class Bank : MonoBehaviour
         }
     }
 
+    //Private Methods
     void UpdateGoldText()
     {
         textGold.text = "Gold: " + intCurrentBalance.ToString();
