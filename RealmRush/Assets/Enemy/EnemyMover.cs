@@ -72,6 +72,8 @@ public class EnemyMover : MonoBehaviour
 
     void RecalculatePath(bool resetPath)
     {
+        StopAllCoroutines();
+
         Vector2Int coordinates = new Vector2Int();
 
         //If the path is being reset to the beginning, set the coordinates to the start.

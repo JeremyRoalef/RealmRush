@@ -146,34 +146,51 @@ public class Pathfinder : MonoBehaviour
     public void NotifyReceivers()
     {
         //Tell any script attached to this gameObject to recalculate the enemy path.
-        BroadcastMessage("RecalculatePath", false, SendMessageOptions.DontRequireReceiver);
+        switch (pathfinding)
+        {
+            case PathfindingMethod.FollowTrail:
+            case PathfindingMethod.DirectPathing:
+                return; //Do not notify as they do not need to be concerned
+            default:
+                BroadcastMessage("RecalculatePath", false, SendMessageOptions.DontRequireReceiver);
+                break;
+        }
+
     }
     public bool WillBlockPath(Vector2Int coordinates)
     {
-        //Test if whatever action is about to happen will prevent the object from ever reaching the path
-
-        if (currentGrid.ContainsKey(coordinates))
+        switch (pathfinding)
         {
-            //Save the TileNode's previous state before changing it
-            bool previousState = currentGrid[coordinates].isWalkable;
+            //Any pathfinding method that does not need to worry about blocked nodes goes here
+            case PathfindingMethod.DirectPathing:
+            case PathfindingMethod.FollowTrail:
+                return false;
+            default:
 
-            //Test what happens if the TileNode is no longer walkable
-            currentGrid[coordinates].isWalkable = false;
+                //Test if whatever action is about to happen will prevent the object from ever reaching the path
+                if (currentGrid.ContainsKey(coordinates))
+                {
+                    //Save the TileNode's previous state before changing it
+                    bool previousState = currentGrid[coordinates].isWalkable;
 
-            List<TileNode> newPath = FindOwnPath();
+                    //Test what happens if the TileNode is no longer walkable
+                    currentGrid[coordinates].isWalkable = false;
 
-            //Reset the TileNode back to its previous state
-            currentGrid[coordinates].isWalkable = previousState;
+                    List<TileNode> newPath = FindOwnPath();
 
-            //If there is no path, this action will block the path
-            if (newPath.Count <= 1)
-            {
-                FindOwnPath();
-                return true;
-            }
+                    //Reset the TileNode back to its previous state
+                    currentGrid[coordinates].isWalkable = previousState;
+
+                    //If there is no path, this action will block the path
+                    if (newPath.Count <= 1)
+                    {
+                        FindOwnPath();
+                        return true;
+                    }
+                }
+                //By default, return false
+                return false;
         }
-        //By default, return false
-        return false;
     }
 
     //Private Methods

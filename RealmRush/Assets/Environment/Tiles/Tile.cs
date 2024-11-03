@@ -34,7 +34,7 @@ public class Tile : MonoBehaviour
 
     //Cashe regerences
     GridManager gridManager;
-    Pathfinder pathfinder;
+    Pathfinder[] pathfinders;
 
     //Attributes
     Vector2Int coordinates = new Vector2Int();
@@ -44,7 +44,7 @@ public class Tile : MonoBehaviour
     {
         //Find references in game scene
         gridManager = FindObjectOfType<GridManager>();
-        pathfinder = FindObjectOfType<Pathfinder>();
+        pathfinders = FindObjectsOfType<Pathfinder>();
     }
 
     void Start()
@@ -73,14 +73,26 @@ public class Tile : MonoBehaviour
     //TODO: Create a new script that allows the behavior of tower building in the game. Tile script should not be responsible for this action!
     void OnMouseDown()
     {
-        //Run only if placing this tower will not break the pathfinding
-        if (gridManager.getTileNode(coordinates).isWalkable && !pathfinder.WillBlockPath(coordinates))
+        //Run for each pathfinders game object
+        foreach (Pathfinder pathfinder in pathfinders)
+        {
+            //If placing this tower will block this path, do not place the tower
+            if (pathfinder.WillBlockPath(coordinates))
+            {
+                return;
+            }
+        }
+        if (gridManager.getTileNode(coordinates).isWalkable && isPlaceable)
         {
             bool isSuccessful = tower.CreateTower(tower, transform.position);
+            //If tower was successfully placed, tell each pathfinder to recalculate the path
             if (isSuccessful)
             {
                 gridManager.BlockNode(coordinates);
-                pathfinder.NotifyReceivers();
+                foreach (Pathfinder pathfinder in pathfinders)
+                {
+                    pathfinder.NotifyReceivers();
+                }
             }
         }
     }
