@@ -9,6 +9,7 @@ TagManager:
   - Land
   - Water
   - Shore
+  - Trail
   layers:
   - Default
   - TransparentFX

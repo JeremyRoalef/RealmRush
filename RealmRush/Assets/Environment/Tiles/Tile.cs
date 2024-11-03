@@ -53,9 +53,14 @@ public class Tile : MonoBehaviour
         if (gridManager != null)
         {
             coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
-            if (!isPlaceable)
+            if (!isPlaceable && !(gameObject.tag == "Trail"))
             {
                 gridManager.BlockNode(coordinates);
+            }
+            //If the object's tag is trail, tell the grid manager the Tile Node at given coordinates is a trail node
+            if (gameObject.tag == "Trail")
+            {
+                gridManager.SetTrail(coordinates, true);
             }
         }
         else

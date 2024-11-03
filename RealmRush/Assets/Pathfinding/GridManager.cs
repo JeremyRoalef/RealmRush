@@ -32,7 +32,7 @@ public class GridManager : MonoBehaviour
         //for every key-value pair in teh currentGrid, reset the TileNodes
         foreach (KeyValuePair<Vector2Int, TileNode> entry in grid)
         {
-            entry.Value.connectedTo = null;
+            entry.Value.parentNode = null;
             entry.Value.isExplored = false;
             entry.Value.isPath = false;
         }
@@ -77,11 +77,14 @@ public class GridManager : MonoBehaviour
             return null;
         }
     }
-
+    public void SetTrail(Vector2Int coordinates, bool isTrail)
+    {
+        grid[coordinates].isTrail = isTrail;
+    }
     //Private Methods
     void CreateGrid()
     {
-        //Create currentGrid of coordinates
+        //Create an x * y sized rectangle of tile nodes. (calculate based on in-game tile length)
         for (int x = 0; x < gridSize.x; x++)
         {
             for (int y = 0; y < gridSize.y; y++)

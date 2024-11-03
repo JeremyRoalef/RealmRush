@@ -7,25 +7,42 @@ using UnityEngine;
  * 
  * This script is responsible for helping the object pool pathfind to its destination. For that reason,
  * this script will be used to create various pathfinding methods to spice up the game
+ * 
+ * this script highlights the importance of knowing what you want to add before adding it. The videos were throwing solutions
+ * to the problem without defining the problem from the beginning, and this code is spagghettified for it.
  */
 
 //TODO: Script only allows for one type of pathfinding. There should be two other types: manual pathing & direct pathing
 //TODO: add ways to swap the pathfinding from automatic, manual, and direct
 public class Pathfinder : MonoBehaviour
 {
+    //Enum
+    public enum PathfindingMethod
+    {
+        FindOwnPath,
+        FollowTrail,
+        DirectPathing
+    }
+
     //Serialized fields
+    [Tooltip("How will the object pool pathfind to its location? Will the pool find its own path? An existing path? or directly head to the location?")]
+    [SerializeField] PathfindingMethod pathfinding;
+    //Property to get the pathfinding method
+    public PathfindingMethod Pathfinding
+    {
+        get { return pathfinding; }
+    }
     [SerializeField] Vector2Int startCoordinates;
-    //Property to get the starting coordinates
+    //Property to get the starting startingCoordinates
     public Vector2Int StartCoordinates {  get { return startCoordinates; } }
 
     [SerializeField] Vector2Int endCoordinates;
-    //Property to get the end coordinates
+    //Property to get the end startingCoordinates
     public Vector2Int EndCoordinates { get { return endCoordinates; } }
 
     //Cashe references
     TileNode startNode;
     TileNode endNode;
-    TileNode currentSearchNode;
     GridManager gridManager;
 
     //Attributes
@@ -58,24 +75,86 @@ public class Pathfinder : MonoBehaviour
 
     void Start()
     {
-        GetNewPath();
+        switch (pathfinding)
+        {
+            case PathfindingMethod.FollowTrail:
+                FollowTrail();
+                break;
+            case PathfindingMethod.FindOwnPath:
+                FindOwnPath();
+                break;
+            case PathfindingMethod.DirectPathing:
+                PathDirectly();
+                break;
+            default:
+                break;
+        }
+
     }
 
     //Public Methods
-    public List<TileNode> GetNewPath()
+    public List<TileNode> FindOwnPath()
     {
-        //Get path form starting coordinates
-        return GetNewPath(startCoordinates);
+        //Get path form starting startingCoordinates
+        return FindOwnPath(startCoordinates);
     }
-    public List<TileNode> GetNewPath(Vector2Int coordinates)
+
+    public List<TileNode> FindOwnPath(Vector2Int coordinates)
     {
         //Reset the path
         gridManager.ResetNodes();
 
-        //UseBreadthFirstSearch from the given coordinates
+        //UseBreadthFirstSearch from the given startingCoordinates
         BreadthFirstSearch(coordinates);
 
         //Build the path based on the breadth first search
+        return BuildPath();
+    }
+    public List<TileNode> FollowTrail()
+    {
+        startNode.isWalkable = true;
+        endNode.isWalkable = true;
+
+        //Reset the path
+        gridManager.ResetNodes();
+
+        //Clear anything that may be in queue
+        reached.Clear();
+
+
+        frontier.Enqueue(startNode);
+
+        reached.Add(startCoordinates, currentGrid[startCoordinates]);
+
+        bool isFindingPath = true;
+
+        TileNode currentSearchNode;
+        while (isFindingPath && frontier.Count > 0)
+        {
+            currentSearchNode = frontier.Dequeue();
+
+            //Check neighbors for trail nodes
+            ExploreNeighbors(currentSearchNode);
+
+            //If the current search node is the destination coordinate, no longer finding the path
+            if (currentSearchNode.coordinates == endCoordinates)
+            {
+                isFindingPath = false; //found the path
+            }
+        }
+
+        //build the path
+        return BuildPath();
+    }
+    public List<TileNode> PathDirectly()
+    {
+        //Reset the path
+        gridManager.ResetNodes();
+
+        //Use trail to determine the path
+        ExploreNeighbors(startNode);
+
+        //Build the path based on the trail
         return BuildPath();
     }
     public void NotifyReceivers()
@@ -85,7 +164,7 @@ public class Pathfinder : MonoBehaviour
     }
     public bool WillBlockPath(Vector2Int coordinates)
     {
-        //Test if whatever action is about to happen will preven the object from ever reaching the path
+        //Test if whatever action is about to happen will prevent the object from ever reaching the path
 
         if (currentGrid.ContainsKey(coordinates))
         {
@@ -95,7 +174,7 @@ public class Pathfinder : MonoBehaviour
             //Test what happens if the TileNode is no longer walkable
             currentGrid[coordinates].isWalkable = false;
 
-            List<TileNode> newPath = GetNewPath();
+            List<TileNode> newPath = FindOwnPath();
 
             //Reset the TileNode back to its previous state
             currentGrid[coordinates].isWalkable = previousState;
@@ -103,7 +182,7 @@ public class Pathfinder : MonoBehaviour
             //If there is no path, this action will block the path
             if (newPath.Count <= 1)
             {
-                GetNewPath();
+                FindOwnPath();
                 return true;
             }
         }
@@ -112,36 +191,7 @@ public class Pathfinder : MonoBehaviour
     }
 
     //Private Methods
-    void ExploreNeighbors()
-    {
-        //Get the neighbors of the current node
-        List<TileNode> neighbors = new List<TileNode>();
-
-        //For each direction, if the coordinate exists in the grid, store the neighboring TileNode in the list of neighbors
-        foreach (Vector2Int direction in directions)
-        {
-            Vector2Int neighborCoordinates = currentSearchNode.coordinates + direction; //right, left, up, down
-
-            if (currentGrid.ContainsKey(neighborCoordinates))
-            {
-                neighbors.Add(currentGrid[neighborCoordinates]);
-            }
-        }
-
-        //For each neighbor TileNode, if the TileNode is not in the reached dictionary & the TileNode is walkable,
-        //connect it to the current search node, add it to the reached dictionary, & add it to the queue
-        foreach (TileNode neighbor in neighbors)
-        {
-            if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isWalkable)
-            {
-                neighbor.connectedTo = currentSearchNode;
-                reached.Add(neighbor.coordinates, neighbor);
-                frontier.Enqueue(neighbor);
-            }
-        }
-    }
-
-    void BreadthFirstSearch(Vector2Int coordinates)
+    void BreadthFirstSearch(Vector2Int startingCoordinates)
     {
         //Set the start & end node to walkable. This must always be true
         startNode.isWalkable = true;
@@ -156,28 +206,80 @@ public class Pathfinder : MonoBehaviour
         //Find the path
         bool isFindingPath = true;
 
-        //Add the TileNode from the given coordinates to the queue
-        frontier.Enqueue(currentGrid[coordinates]);
+        //Add the starting TileNode from the given startingCoordinates to the queue
+        frontier.Enqueue(currentGrid[startingCoordinates]);
         
-        //Current TileNode has been reached
-        reached.Add(coordinates, currentGrid[coordinates]);
+        //Starting TileNode has been reached. Add to dictionary of reached nodes
+        reached.Add(startingCoordinates, currentGrid[startingCoordinates]);
+
+        TileNode currentSearchNode;
 
         //While there are TileNodes in queue & searching for path...
         while (frontier.Count > 0 && isFindingPath == true)
         {
-            //currently searching through the TileNodes in queue
+            //Take out the next TileNode in queue
             currentSearchNode = frontier.Dequeue();
 
             //Set the node to explored
             currentSearchNode.isExplored = true;
 
-            //Explore the current node's neighbors
-            ExploreNeighbors();
+            //Explore the current node's neighbors (This will connect neighboring nodes to the current node)
+            ExploreNeighbors(currentSearchNode);
 
             //If the current search node is the destination coordinate, no longer finding the path
             if (currentSearchNode.coordinates == endCoordinates)
             {
-                isFindingPath = false;
+                isFindingPath = false; //found the path
+            }
+        }
+    }
+    void ExploreNeighbors(TileNode parentNode)
+    {
+        //Get the neighbors of the tile node
+        List<TileNode> neighbors = new List<TileNode>();
+
+        //For each direction, if the coordinate exists in the grid, store the neighboring TileNode in the list of neighbors
+        foreach (Vector2Int direction in directions) //(1,0), (-1,0), (0,1), (0,-1)
+        {
+            Vector2Int neighborCoordinates = parentNode.coordinates + direction; //right, left, up, down
+
+            //If node exists in the grid, add it to the list of neighboring tile nodes. (otherwise you'll be adding a null object)
+            if (currentGrid.ContainsKey(neighborCoordinates))
+            {
+                neighbors.Add(currentGrid[neighborCoordinates]);
+            }
+        }
+        
+        foreach (TileNode neighbor in neighbors)
+        {
+            //switch logic based on pathfinding method
+            switch (pathfinding)
+            {
+                case PathfindingMethod.FollowTrail:
+                    //Add each tile node to the reached dictionary and to the queue if the node hasn't yet been reached and it is part of the trail
+                    if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isTrail)
+                    {
+                        neighbor.parentNode = parentNode;
+                        reached.Add(neighbor.coordinates, neighbor);
+                        //Add to queue to search through its neighboring tile nodes (if it has any)
+                        frontier.Enqueue(neighbor);
+                    }
+                    break;
+
+                case PathfindingMethod.FindOwnPath:
+                    //Add each tile node to the reached dictionary and to the queue if the node hasn't yet been reached and it can be walked on
+                    if (!reached.ContainsKey(neighbor.coordinates) && neighbor.isWalkable)
+                    {
+                        neighbor.parentNode = parentNode;
+                        reached.Add(neighbor.coordinates, neighbor);
+                        //Add to queue to search through its neighboring tile nodes (if it has any)
+                        frontier.Enqueue(neighbor);
+                    }
+                    break;
+
+                default:
+                    Debug.Log("Pathfinding method does not need to explore neighbors to pathfind");
+                    break;
             }
         }
     }
@@ -187,7 +289,7 @@ public class Pathfinder : MonoBehaviour
         //Generate a new list for the path
         List<TileNode> path = new List<TileNode>();
 
-        TileNode currentNode = endNode;
+        TileNode currentNode = endNode; //start from end, since nodes are connected from end to start
 
         //Add the current node to the path
         path.Add(currentNode);
@@ -196,10 +298,10 @@ public class Pathfinder : MonoBehaviour
         currentNode.isPath = true;
 
         //While the current node is connected to a TileNode
-        while (currentNode.connectedTo != null)
+        while (currentNode.parentNode != null)
         {
             //Current node is the one its connected to
-            currentNode = currentNode.connectedTo;
+            currentNode = currentNode.parentNode;
 
             //Add the node to the path
             path.Add(currentNode);
@@ -212,5 +314,4 @@ public class Pathfinder : MonoBehaviour
         path.Reverse();
         return path;
     }
-
 }

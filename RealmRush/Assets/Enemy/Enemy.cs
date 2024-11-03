@@ -41,7 +41,7 @@ public class Enemy : MonoBehaviour
         //DO NOT RUN IF THERE IS NO BANK!!!
         if (bank == null) 
         {
-            Debug.Log("the is no bank");
+            Debug.Log("there is no bank");
             return; 
         }
 

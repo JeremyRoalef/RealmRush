@@ -36,7 +36,28 @@ public class EnemyMover : MonoBehaviour
     void OnEnable()
     {
         ReturnToStart();
-        RecalculatePath(true);
+
+        //Stop any coroutine
+        StopAllCoroutines();
+
+        //clear whatever may be in the path before generating new path
+        path.Clear();
+
+        switch (pathfinder.Pathfinding)
+        {
+            case Pathfinder.PathfindingMethod.FollowTrail:
+                FollowTrail();
+                break;
+            case Pathfinder.PathfindingMethod.FindOwnPath:
+                RecalculatePath(true);
+                break;
+            case Pathfinder.PathfindingMethod.DirectPathing:
+                PathDirectly();
+                break;
+            default:
+                Debug.Log("No pathfinding method determined. Please select a pathfind method");
+                break;
+        }
     }
 
     //Public Methods
@@ -63,18 +84,23 @@ public class EnemyMover : MonoBehaviour
             coordinates = gridManager.GetCoordinatesFromPosition(transform.position);
         }
 
-        //Stor any coroutine
-        StopAllCoroutines();
-
-        //clear whatever may be in the path before generating new path
-        path.Clear(); 
-
         //determine new path based on current coordinates
-        path = pathfinder.GetNewPath(coordinates);
+        path = pathfinder.FindOwnPath(coordinates);
 
         StartCoroutine(FollowPath());
     }
 
+    void FollowTrail()
+    {
+        path = pathfinder.FollowTrail();
+        StartCoroutine(FollowPath());
+    }
+
+    void PathDirectly()
+    {
+        path = pathfinder.PathDirectly();
+        StartCoroutine(FollowPath());
+    }
     void FinishPath()
     {
         //Enemy reached the castle

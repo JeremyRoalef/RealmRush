@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2332330577380294187
+--- !u!1001 &3329600218849425612
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 108277871846157903, guid: 1f595b04938236e4abb98974694a7768, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071079
+      value: 0.70710784
       objectReference: {fileID: 0}
     - target: {fileID: 108277871846157903, guid: 1f595b04938236e4abb98974694a7768, type: 3}
       propertyPath: m_LocalRotation.y
@@ -63,10 +63,14 @@ PrefabInstance:
     - target: {fileID: 2978992042791589637, guid: 1f595b04938236e4abb98974694a7768, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: -2432090755550338912, guid: e618ab8e55a3ed942a408f4d1b7f896e, type: 3}
+      objectReference: {fileID: -2432090755550338912, guid: 626410dc07212d749823da2540a223bb, type: 3}
     - target: {fileID: 4231333639877471317, guid: 1f595b04938236e4abb98974694a7768, type: 3}
       propertyPath: m_Name
-      value: Tile RoadStraightHorizontal
+      value: Tile CornerTopLeft 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4231333639877471317, guid: 1f595b04938236e4abb98974694a7768, type: 3}
+      propertyPath: m_TagString
+      value: Trail
       objectReference: {fileID: 0}
     - target: {fileID: 9156769750649718325, guid: 1f595b04938236e4abb98974694a7768, type: 3}
       propertyPath: isPlaceable

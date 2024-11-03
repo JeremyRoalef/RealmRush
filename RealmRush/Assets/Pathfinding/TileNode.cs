@@ -15,14 +15,18 @@ public class TileNode
     public bool isWalkable; //can enemies walk on this tile?
     public bool isExplored; //has this TileNode been eplored while searching for a path?
     public bool isPath; //Is this TileNode part of the path?
+    public bool isTrail; //Is this TileNode part of a trail?
 
     //TileNodes attached to this TileNode
-    public TileNode connectedTo;
+    public TileNode parentNode;
 
     //TileNode constructor
     public TileNode(Vector2Int coordinates, bool isWalkable)
     {
         this.coordinates = coordinates;
         this.isWalkable = isWalkable;
+        this.isExplored = false;
+        this.isPath = false;
+        this.isTrail = false;
     }
 }
