@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6426461825541246759}
   - component: {fileID: 4349863832639484926}
+  - component: {fileID: 9038286320846622466}
   m_Layer: 0
   m_Name: ObjectPool
   m_TagString: Untagged
@@ -47,3 +48,17 @@ MonoBehaviour:
   ram: {fileID: 5040643765344069697, guid: b940df629b09f434dbb9fd487257db6c, type: 3}
   intPoolSize: 5
   fltInstantiationWaitTime: 2
+--- !u!114 &9038286320846622466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5694321279898849735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53a320100e730842b5a23eae971a9d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startCoordinates: {x: 0, y: 0}
+  endCoordinates: {x: 0, y: 0}

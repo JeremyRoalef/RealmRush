@@ -15,12 +15,21 @@ public class Tile : MonoBehaviour
 {
     //Serialized Fields
     [SerializeField] bool isPlaceable = true;
+
     //Property for isPlaceable attribute
     public bool IsPlaceable
     {
         get { return isPlaceable; }
         set { isPlaceable = value; }
     }
+    //enum to store the type of tile this script is attached to
+    enum TileType
+    {
+        Land,
+        Shore,
+        Water
+    };
+    [SerializeField] TileType tileType;
     [SerializeField] Tower tower;
 
     //Cashe regerences
@@ -29,7 +38,6 @@ public class Tile : MonoBehaviour
 
     //Attributes
     Vector2Int coordinates = new Vector2Int();
-
 
     private void Awake()
     {

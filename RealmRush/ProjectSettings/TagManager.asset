@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Path
+  - TileHolder
+  - Land
+  - Water
+  - Shore
   layers:
   - Default
   - TransparentFX

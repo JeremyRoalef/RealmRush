@@ -28,8 +28,11 @@ public class CoordinateLabeler : MonoBehaviour
     //Attributes
     Vector2Int position = new Vector2Int();
 
-    private void Awake()
+    //Event Systems
+    void Awake()
     {
+        //Place the tile in the correct empty game object 
+
         //Find object in scene that has the currentGrid manager.
         gridManager = FindObjectOfType<GridManager>();
 
@@ -43,6 +46,7 @@ public class CoordinateLabeler : MonoBehaviour
         //Default text coordinates to false so players don't see it in the game
         textCoordinate.enabled = false;
     }
+
     void Update()
     {
         /*
@@ -55,7 +59,7 @@ public class CoordinateLabeler : MonoBehaviour
         {
             DisplayCurrentCoordinates();
             UpdateGameObjectName();
-            textCoordinate.enabled=true;
+            textCoordinate.enabled = true;
             SetTextColor();
         }
         else
@@ -64,14 +68,18 @@ public class CoordinateLabeler : MonoBehaviour
             SetTextColor();
         }
     }
+
+    //Public Methods
+
+    //Private Methods
     void DisplayCurrentCoordinates()
     {
         //DO NOT RUN IF THERE IS NO GRID MANAGER!!!
-        if (gridManager == null) { return; }
+        if (!CheckForGridManager()) { return; }
 
         //Get the x,y coordinate pair of the parent game object.
-        position.x = Mathf.RoundToInt(transform.parent.position.x/ gridManager.UnityGridSize); //position is multiplicative of 10, but can use the currentGrid snapp setting
-        position.y = Mathf.RoundToInt(transform.parent.position.z/ gridManager.UnityGridSize); //the 2d layout in the game uses x,z coordinates, so the z coordinate will be stored in the second vector
+        position.x = Mathf.RoundToInt(transform.parent.position.x / gridManager.UnityGridSize); //position is multiplicative of 10, but can use the currentGrid snapp setting
+        position.y = Mathf.RoundToInt(transform.parent.position.z / gridManager.UnityGridSize); //the 2d layout in the game uses x,z coordinates, so the z coordinate will be stored in the second vector
 
         //Set UI text
         textCoordinate.text = $"{position.x},{position.y}";
@@ -86,7 +94,7 @@ public class CoordinateLabeler : MonoBehaviour
     void SetTextColor()
     {
         //DO NOT RUN IF THERE IS NO GRID MANAGER!!!
-        if (gridManager == null) { return; }
+        if (!CheckForGridManager() ) { return; }
 
         //temp tile node
         TileNode tileNode = gridManager.getTileNode(position);
@@ -120,5 +128,29 @@ public class CoordinateLabeler : MonoBehaviour
         {
             textCoordinate.enabled = !textCoordinate.enabled;
         }
+    }
+
+    bool CheckForGridManager()
+    {
+        if (gridManager == null)
+        {
+            //do a double check in case the grid manager was added, but code did not update
+            gridManager = FindObjectOfType<GridManager>();
+
+            //If it is still null, return false
+            if (gridManager == null)
+            {
+                Debug.Log("Grid Manager does not eixt. Please create one.");
+                //Grid manager not fount
+                return false;
+            }
+            else
+            {
+                //Grid manager found
+                return true;
+            }
+        }
+        //Grid manager found
+        return true;
     }
 }
