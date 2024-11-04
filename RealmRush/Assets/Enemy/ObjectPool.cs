@@ -9,70 +9,92 @@ using UnityEngine;
  */
 public class ObjectPool : MonoBehaviour
 {
-    //TODO: Object pool will no longer rely on one type of enemy to spawn enemies, but rather will accept an array of enemies that will release
-    //TODO: Add an initial wait time before letting the objects in the pool go.
-
     //Serialized fields
-    [SerializeField] GameObject ram;
+    [SerializeField] WaveSO[] waves;
+    //Property to get number of waves
+    public int WaveCount
+    {
+        get { return waves.Length-1; }
+    }
+
     [SerializeField] [Range(0,50)] int intPoolSize = 5;
-    [SerializeField] [Range(0.1f, 180f)] float fltInstantiationWaitTime = 1f;
 
     //Cashe references
-    //TODO: change the enemy pool to a serialized field. The pool of enemies will be determined within unity & this script's job will simply be to instantiate & enable the enemies in the game
     GameObject[] enemyPool;
+    GameManager gameManager;
 
     //Attributes
-    bool isSpawning = false;
+    bool isSpawningWave = false;
+    //Property for wave spawning
+    public bool IsSpawningWave
+    {
+        get { return isSpawningWave; }
+        set { isSpawningWave = value; }
+    }
 
     //Event Systems
-    void Start()
+    private void Awake()
     {
-        //Add enemies to the pool
-        PopulatePool();
+        gameManager = FindObjectOfType<GameManager>();
     }
-    void Update()
-    {
-        //if no enemies are spawning, spawn enemies
-        if (!isSpawning)
-        {
-            StartCoroutine(InstantiateEnemy());
-        }
-    }
+
     //Public Methods
+    public void StartNextWave(int index)
+    {
+        StartCoroutine(SpawnWave(index));
+    }
 
     //Private Methods
     void PopulatePool()
     {
-        //Instantiate enemies to the enemy pool
-        enemyPool = new GameObject[intPoolSize];
-        for (int i = 0; i < enemyPool.Length; i++)
-        {
-            enemyPool[i] = Instantiate(ram, transform);
-            enemyPool[i].SetActive(false);
-        }
+        ////Instantiate enemies to the enemy pool
+        //enemyPool = new GameObject[intPoolSize];
+        //for (int i = 0; i < enemyPool.Length; i++)
+        //{
+        //    enemyPool[i] = Instantiate(ram, transform);
+        //    enemyPool[i].SetActive(false);
+        //}
     }
     void EnableObjectInPool()
     {
-        //enable the first object in the pool that is disabled.
-        foreach (GameObject obj in enemyPool)
-        {
-            if (obj.activeInHierarchy == false)
-            {
-                obj.SetActive(true);
-                break;
-            }
-        }
+        ////enable the first object in the pool that is disabled.
+        //foreach (GameObject obj in enemyPool)
+        //{
+        //    if (obj.activeInHierarchy == false)
+        //    {
+        //        obj.SetActive(true);
+        //        break;
+        //    }
+        //}
     }
-    IEnumerator InstantiateEnemy()
+    
+    IEnumerator SpawnWave(int index)
     {
-        //spawning enemy
-        isSpawning = true;
+        if (index >= waves.Length)
+        {
+            Debug.Log("No more waves");
+            yield break;
+        }
 
-        //wait to spawn next enemy
-        yield return new WaitForSeconds(fltInstantiationWaitTime);
-        EnableObjectInPool();
+        //Spawning wave
+        isSpawningWave = true;
 
-        //no longer spawning enemy
-        isSpawning = false;
+        //get the wave's index in the SO
+        WaveSO currentWave = waves[index];
+        Debug.Log("Spawning wave");
+
+        //Wait the start delay before doing anything
+        yield return new WaitForSeconds(currentWave.startDelay);
+
+        //for each enemy in the wave, instantiate and wait between instantiating another one
+        foreach (GameObject enemy in currentWave.enemies)
+        {
+            GameObject tempEnemy = Instantiate(enemy, transform);
+            tempEnemy.SetActive(true);
+            yield return new WaitForSeconds(currentWave.delayBetweenInstantiation);
+        }
+
+        //No longer spawning wave
+        gameManager.SetWaveSpawn(this);
     }
 }
