@@ -13,11 +13,10 @@ using UnityEngine;
 [RequireComponent(typeof(Enemy))]
 public class EnemyHealth : MonoBehaviour
 {
+    //TODO: Create an enemy SO that the user sets up. get the data from there. (too many serialized fields in the game will cause lag)
+
     //Serialized fields
     [SerializeField] int maxHp = 5;
-
-    //TODO: enemy health will no longer scale as the object is enabled and disabled. Rather, the enemies will come in waves and health will scale based on variables happening behind the scenes
-    [SerializeField] [Tooltip("Add amount to max hp when enemy dies")] int hpIncrement = 1;
 
     //Cashe references
     Enemy enemy;
@@ -28,7 +27,6 @@ public class EnemyHealth : MonoBehaviour
     //Event Systems
     void OnEnable()
     {
-        //Reset hp
         currentHp = maxHp;
     }
 
@@ -40,9 +38,8 @@ public class EnemyHealth : MonoBehaviour
         //If out of hp, disable game object, reward gold, & scale max hp
         if (currentHp <= 0)
         {
-            gameObject.SetActive(false);
-            enemy.RewardGold();
-            maxHp += hpIncrement;
+            enemy.RewardGold(); 
+            Destroy(gameObject);
         }
     }
     void Start()

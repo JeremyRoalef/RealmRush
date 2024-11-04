@@ -119,7 +119,7 @@ public class EnemyMover : MonoBehaviour
     void FinishPath()
     {
         //Enemy reached the castle
-        gameObject.SetActive(false);
+        Destroy(gameObject);
         enemy.RemoveGold();
     }
     

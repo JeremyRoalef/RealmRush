@@ -9,7 +9,7 @@ using UnityEngine;
  */
 public class ObjectPool : MonoBehaviour
 {
-    //Serialized fields
+    //Serialized Fields
     [SerializeField] WaveSO[] waves;
     //Property to get number of waves
     public int WaveCount
@@ -25,11 +25,12 @@ public class ObjectPool : MonoBehaviour
 
     //Attributes
     bool isSpawningWave = false;
+    bool waveIsOver = true;
     //Property for wave spawning
-    public bool IsSpawningWave
+    public bool WaveIsOver
     {
-        get { return isSpawningWave; }
-        set { isSpawningWave = value; }
+        get { return waveIsOver; }
+        set { waveIsOver = value; }
     }
 
     //Event Systems
@@ -38,6 +39,20 @@ public class ObjectPool : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
     }
 
+    private void Update()
+    {
+        //if the wave is not spawning, check if there are any children in the obejct pool (any enemies alive)
+        if (!isSpawningWave)
+        {
+            int numOfChildren = transform.childCount;
+            //If there are no children, then it's safe to assume the wave is over.
+            if (numOfChildren == 0)
+            {
+                //Debug.Log($"End of wave for {this.name}");
+                waveIsOver = true;
+            }
+        }
+    }
     //Public Methods
     public void StartNextWave(int index)
     {
@@ -45,29 +60,6 @@ public class ObjectPool : MonoBehaviour
     }
 
     //Private Methods
-    void PopulatePool()
-    {
-        ////Instantiate enemies to the enemy pool
-        //enemyPool = new GameObject[intPoolSize];
-        //for (int i = 0; i < enemyPool.Length; i++)
-        //{
-        //    enemyPool[i] = Instantiate(ram, transform);
-        //    enemyPool[i].SetActive(false);
-        //}
-    }
-    void EnableObjectInPool()
-    {
-        ////enable the first object in the pool that is disabled.
-        //foreach (GameObject obj in enemyPool)
-        //{
-        //    if (obj.activeInHierarchy == false)
-        //    {
-        //        obj.SetActive(true);
-        //        break;
-        //    }
-        //}
-    }
-    
     IEnumerator SpawnWave(int index)
     {
         if (index >= waves.Length)
@@ -78,6 +70,7 @@ public class ObjectPool : MonoBehaviour
 
         //Spawning wave
         isSpawningWave = true;
+        waveIsOver = false;
 
         //get the wave's index in the SO
         WaveSO currentWave = waves[index];
@@ -95,6 +88,6 @@ public class ObjectPool : MonoBehaviour
         }
 
         //No longer spawning wave
-        gameManager.SetWaveSpawn(this);
+        isSpawningWave = false;
     }
 }

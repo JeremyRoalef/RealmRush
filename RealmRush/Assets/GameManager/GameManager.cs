@@ -12,12 +12,18 @@ using UnityEngine.InputSystem;
  */
 public class GameManager : MonoBehaviour
 {
+    //Serialized Fields
     [SerializeField] InputAction waveSpawn;
+
+    //Cashe References
     ObjectPool[] objectPools;
+
+    //Attributes
     bool isSpawningWave = false;
     int waveIndex = 0;
     int maxWaveIndex = 0;
 
+    //Event Systems
     private void Awake()
     {
         objectPools = FindObjectsOfType<ObjectPool>();
@@ -29,7 +35,7 @@ public class GameManager : MonoBehaviour
             {
                 maxWaveIndex = objectPool.WaveCount;
             }
-            Debug.Log($"Max wave index = {maxWaveIndex}");
+            //Debug.Log($"Max wave index = {maxWaveIndex}");
         }
     }
     private void OnEnable()
@@ -52,41 +58,35 @@ public class GameManager : MonoBehaviour
             }
             waveIndex++;
         }
-
-        if (CanSpawnNextWave())
+        if (WaveIsOver())
         {
             isSpawningWave = false;
-        }
-    }
-
-    public void SetWaveSpawn(ObjectPool objectPool)
-    {
-        //get object pool in array
-        foreach(ObjectPool pool in objectPools)
-        {
-            if (objectPool == pool)
+            if (waveIndex > maxWaveIndex)
             {
-                //Debug.Log($"Object Pool {pool.name} is no longer spawning");
-                pool.IsSpawningWave = false;
-                break;
+                Debug.Log("YOU WIN!");
             }
         }
-        //Debug.Log($"Can next wave be spawned? {CanSpawnNextWave()}");
     }
 
-    bool CanSpawnNextWave()
+    //Public Methods
+
+    //Private Methods
+    bool WaveIsOver()
     {
         //check if all the waves are done spawning their wave
         for (int i = 0; i < objectPools.Length; i++)
         {
+            //Debug.Log($"Is object pool's wave over? {objectPools[i].WaveIsOver}");
+
             //If the pool is still spawning wave, return false
-            if (objectPools[i].IsSpawningWave)
+            if (!objectPools[i].WaveIsOver)
             {
                 return false;
             }
             //Otherwise, if it's the last pool in the list, then no pools are spawning their waves and can return true
             else if ( i == objectPools.Length - 1)
             {
+                //Debug.Log($"Can spawn next wave after searching {objectPools[objectPools.Length - 1].name}");
                 return true;
             }
         }
