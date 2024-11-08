@@ -16,6 +16,7 @@ public class TileNode
     public bool isExplored; //has this TileNode been eplored while searching for a path?
     public bool isPath; //Is this TileNode part of the path?
     public bool isTrail; //Is this TileNode part of a trail?
+    public int resistance = 1;
 
     //TileNodes attached to this TileNode
     public TileNode parentNode;
