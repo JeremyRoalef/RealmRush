@@ -21,10 +21,6 @@ public class Enemy : MonoBehaviour
     {
         //set references
         bank = FindObjectOfType<Bank>();
-        if (bank == null)
-        {
-            Debug.Log("There is no bank");
-        }
     }
 
     //Public Methods

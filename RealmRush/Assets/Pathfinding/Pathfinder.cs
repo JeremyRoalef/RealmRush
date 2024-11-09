@@ -77,6 +77,9 @@ public class Pathfinder : MonoBehaviour
     {
         switch (pathfinding)
         {
+            case PathfindingMethod.FollowTrail:
+                FollowTrail();
+                break;
             case PathfindingMethod.FindOwnPath:
                 FindOwnPath();
                 break;
@@ -108,10 +111,6 @@ public class Pathfinder : MonoBehaviour
     {
         startNode.isWalkable = true;
         endNode.isWalkable = true;
-
-        PathOfLeastResistance pathOfLeastResistance = new PathOfLeastResistance(startNode, endNode, currentGrid);
-
-        return pathOfLeastResistance.GetPathOfLeastResistance();
 
         //Reset the path
         gridManager.ResetNodes();
