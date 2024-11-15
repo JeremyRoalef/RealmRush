@@ -2040,6 +2040,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
+  - component: {fileID: 963194230}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2181,6 +2182,36 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &963194230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 316f7a872d5eb0e4294313fdbfb820ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveCamera:
+    m_Name: Move Camera
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: b8967bcd-73a1-438e-a3d0-669460af083a
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 550aecb3-8ce9-4238-9cbf-6ef02370f17e
+      m_Path: <Mouse>/rightButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Camera
+      m_Flags: 0
+    m_Flags: 0
+  cameraMoveSpeed: 0.1
 --- !u!1001 &1026676239
 PrefabInstance:
   m_ObjectHideFlags: 0
